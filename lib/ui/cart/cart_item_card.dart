@@ -36,7 +36,7 @@ class CartItemCard extends StatelessWidget {
       ),
       direction:  DismissDirection.endToStart,
       confirmDismiss: (direction){
-        return showConnfirmDialog(context, 'Do you want to remove the item from the cart?');
+        return showConfirmDialog(context, 'Do you want to remove the item from the cart?');
       },
       onDismissed: (direction) {
         context.read<CartManager>().removeItem(productId);
