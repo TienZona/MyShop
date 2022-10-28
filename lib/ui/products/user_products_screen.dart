@@ -9,6 +9,11 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
   const UserProductsScreen({super.key});
 
+
+  Future<void> _refreshProducts(BuildContext context) async {
+    await context.read<ProductsManager>().fetchProducts(true);
+  }
+
   @override
 
   Widget build(BuildContext context){
@@ -22,10 +27,20 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: RefreshIndicator(  
-        onRefresh: () async => print('refresh products'),
-        child: buildUserProductListView(productsManager)
-      ),
+      body: FutureBuilder(  
+        future: _refreshProducts(context),
+        builder: (ctx, snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(  
+              child: CircularProgressIndicator(),
+            );
+          }
+          return RefreshIndicator(  
+            onRefresh: () => _refreshProducts(context),
+            child: buildUserProductListView(productsManager),
+          );
+        },
+      )
     );
   }
 
